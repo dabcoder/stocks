@@ -37,6 +37,6 @@ stocksQuery company =
 
 getStocksResp :: String -> Maybe Stock
 getStocksResp company = do
-  obj <- simpleHttp (conditionsQuery company)
+  obj <- simpleHttp (stocksQuery company)
   --return $ decode obj :: Maybe Observation
   return $ decode obj :: Maybe Stock
