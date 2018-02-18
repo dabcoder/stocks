@@ -1,0 +1,3 @@
+# stocks  
+
+Attempt to make a Haskell module for the IEX API. Not working yet...
