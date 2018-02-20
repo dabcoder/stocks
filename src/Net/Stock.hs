@@ -8,6 +8,9 @@ module Net.Stocks
        , getStocksResp
        ) where
   
+import Control.Monad
+import Control.Applicative 
+        
 import Data.Aeson
 import GHC.Generics
 import Data.ByteString.Lazy.Char8 (pack)
@@ -35,8 +38,7 @@ stocksQuery :: String -> String
 stocksQuery company =
     "https://api.iextrading.com/1.0/stock/" ++ company ++ "/quote"
 
-getStocksResp :: String -> Maybe Stock
+getStocksResp :: String -> IO (Maybe Stock)
 getStocksResp company = do
-  obj <- simpleHttp (stocksQuery company)
-  --return $ decode obj :: Maybe Observation
-  return $ decode obj :: Maybe Stock
+    obj <- simpleHttp (stocksQuery company)
+    return $ decode obj
