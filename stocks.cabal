@@ -18,8 +18,7 @@ library
   -- other-modules:
   -- other-extensions:
   build-depends: base == 4.*
-               , HTTP >= 4000.2.12
-               , text >= 1.1.0
+               , http-conduit
                , aeson >= 0.8.0
                , bytestring >= 0.10.4
   hs-source-dirs:      src
