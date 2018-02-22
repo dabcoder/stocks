@@ -4,7 +4,7 @@ Haskell library for the IEX trading API.
 
 Example:  
 
-```
+```haskell
 {{-# LANGUAGE RecordWildCards #-}
 
 import Net.Stocks
