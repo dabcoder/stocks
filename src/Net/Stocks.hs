@@ -29,11 +29,12 @@ instance FromJSON Stock where
 
 type Company = String
 
--- builds the URL
-stocksQuery :: String -> String
+-- builds the URL: /stock/{symbol}/quote
+stocksQuery :: Company -> String
 stocksQuery company =
     "https://api.iextrading.com/1.0/stock/" ++ company ++ "/quote"
 
+-- get JSON data 
 getStocksResp :: String -> IO (Maybe Stock)
 getStocksResp company = do
     obj <- simpleHttp (stocksQuery company)
