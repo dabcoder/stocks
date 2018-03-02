@@ -3,6 +3,7 @@
 module Net.Stocks
        ( Stock(..)
        , Financials(..)
+       , QueryType(..)
        , Company
        , getData
        ) where
