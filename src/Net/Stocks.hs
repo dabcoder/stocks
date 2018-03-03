@@ -3,9 +3,9 @@
 module Net.Stocks
        ( Stock(..)
        , Financials(..)
+       , QueryType(..)
        , Company
-       , getStocksResp
-       , getFinancialsResp
+       , getData
        ) where
   
 import Control.Monad
@@ -49,24 +49,25 @@ instance FromJSON Financials where
 
 type Company = String
 
+baseURL :: String
+baseURL = "https://api.iextrading.com/1.0/stock/"
+
+data QueryType = QueryStocks
+               | QueryFinancials
+
 -- builds the URL: /stock/{symbol}/quote
 stocksQuery :: Company -> String
-stocksQuery company =
-    "https://api.iextrading.com/1.0/stock/" ++ company ++ "/quote"
+stocksQuery company = baseURL ++ company ++ "/quote"
 
 -- builds the URL: /stock/{symbol}/financials
 financialsQuery :: Company -> String
-financialsQuery company =
-    "https://api.iextrading.com/1.0/stock/" ++ company ++ "/financials"
+financialsQuery company = baseURL ++ company ++ "/financials"
 
 -- get JSON data 
-getStocksResp :: String -> IO (Maybe Stock)
-getStocksResp company = do
-    obj <- simpleHttp (stocksQuery company)
+getData :: (FromJSON a) => String -> QueryType -> IO (Maybe a)
+getData company qt = do
+    obj <- simpleHttp (query qt company)
     return $ decode obj
-
--- get JSON data 
-getFinancialsResp :: String -> IO (Maybe Financials)
-getFinancialsResp company = do
-    obj <- simpleHttp (financialsQuery company)
-    return $ decode obj
+  where
+    query QueryStocks     = stocksQuery
+    query QueryFinancials = financialsQuery
