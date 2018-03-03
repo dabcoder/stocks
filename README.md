@@ -5,7 +5,7 @@ Haskell library for the IEX trading API.
 Example:  
 
 ```haskell
-{{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE RecordWildCards #-}
 
 import Net.Stocks
 
@@ -14,7 +14,7 @@ comp = "AAPL"
 
 main :: IO ()
 main = do
-    resp <- getStocksResp comp
+    resp <- getData comp QueryStocks
     case resp of
         Nothing -> putStrLn "No data for that company"
         Just (Stock{..}) -> do
