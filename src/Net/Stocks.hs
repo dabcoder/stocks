@@ -3,6 +3,7 @@
 module Net.Stocks
        ( Stock(..)
        , Financials(..)
+       , FinancialsList(..)
        , QueryType(..)
        , Company
        , getData
@@ -11,6 +12,7 @@ module Net.Stocks
 import Control.Monad
 import Control.Applicative
 import Data.Aeson
+import Data.List.NonEmpty
 import Network.HTTP.Conduit
 
 -- | Stock data
@@ -29,7 +31,7 @@ instance FromJSON Stock where
         <*> v .: "changePercent"
     parseJSON _          = mzero
 
-newtype FinancialsList = FinancialsList { financialsList :: [Financials]}
+newtype FinancialsList = FinancialsList { financialsList :: NonEmpty Financials}
 
 instance FromJSON FinancialsList where
     parseJSON (Object o) = FinancialsList <$> o .: "financials"
