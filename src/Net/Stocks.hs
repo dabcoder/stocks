@@ -7,7 +7,7 @@ module Net.Stocks
        , QueryType(..)
        , Company
        , getData
-       , getArrayData
+       , getNonJSONData
        ) where
   
 import Control.Monad
@@ -63,6 +63,8 @@ baseURL = "https://api.iextrading.com/1.0/stock/"
 
 data QueryType = QueryStocks
                | QueryFinancials
+               | QueryPeers
+               | QueryPrice
 
 -- builds the URL: /stock/{symbol}/quote
 stocksQuery :: Company -> String
@@ -76,6 +78,10 @@ financialsQuery company = baseURL ++ company ++ "/financials"
 peersQuery :: Company -> String
 peersQuery company = baseURL ++ company ++ "/peers"
 
+-- builds the URL: /stock/{symbol}/price
+priceQuery :: Company -> String
+priceQuery company = baseURL ++ company ++ "/price"
+
 -- get JSON data 
 getData :: (FromJSON a) => String -> QueryType -> IO (Maybe a)
 getData company qt = do
@@ -85,8 +91,11 @@ getData company qt = do
     query QueryStocks     = stocksQuery
     query QueryFinancials = financialsQuery
 
--- Get array data
-getArrayData :: String -> IO ByteString
-getArrayData company = do
-    obj <- simpleHttp (peersQuery company)
+-- Get non JSON data
+getNonJSONData :: String -> QueryType -> IO ByteString
+getNonJSONData company qt = do
+    obj <- simpleHttp (query qt company)
     return obj
+  where
+    query QueryPeers = peersQuery
+    query QueryPrice = priceQuery
