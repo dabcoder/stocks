@@ -7,12 +7,14 @@ module Net.Stocks
        , QueryType(..)
        , Company
        , getData
+       , getArrayData
        ) where
   
 import Control.Monad
 import Control.Applicative
 import Data.Aeson
 import Data.List.NonEmpty
+import Data.ByteString.Lazy.Char8
 import Network.HTTP.Conduit
 
 -- | Stock data
@@ -70,6 +72,10 @@ stocksQuery company = baseURL ++ company ++ "/quote"
 financialsQuery :: Company -> String
 financialsQuery company = baseURL ++ company ++ "/financials"
 
+-- builds the URL: /stock/{symbol}/peers
+peersQuery :: Company -> String
+peersQuery company = baseURL ++ company ++ "/peers"
+
 -- get JSON data 
 getData :: (FromJSON a) => String -> QueryType -> IO (Maybe a)
 getData company qt = do
@@ -78,3 +84,9 @@ getData company qt = do
   where
     query QueryStocks     = stocksQuery
     query QueryFinancials = financialsQuery
+
+-- Get array data
+getArrayData :: String -> IO ByteString
+getArrayData company = do
+    obj <- simpleHttp (peersQuery company)
+    return obj
