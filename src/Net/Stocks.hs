@@ -1,14 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Net.Stocks
-       ( Stock(..)
-       , Financials(..)
-       , FinancialsList(..)
-       , QueryType(..)
-       , Company
-       , getData
-       , getNonJSONData
-       ) where
+module Net.Stocks where
   
 import Control.Monad
 import Control.Applicative
