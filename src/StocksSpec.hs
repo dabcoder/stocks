@@ -8,16 +8,16 @@ main = hspec $ do
     -- quote URL
     describe "stocksQuery" $ do
         it "returns the URL with the quote endpoint" $
-            stocksQuery "AAPL" `shouldBe` "https://api.iextrading.com/1.0/stock/AAPL/quote"
+            stocksQuery "AAPL" `shouldBe` "https://api.iextrading.com/1.0/stock/aapl/quote"
     -- financials URL
     describe "financialsQuery" $ do
         it "returns the URL with the financials endpoint" $
-            financialsQuery "AAPL" `shouldBe` "https://api.iextrading.com/1.0/stock/AAPL/financials"
+            financialsQuery "AAPL" `shouldBe` "https://api.iextrading.com/1.0/stock/aapl/financials"
     -- peers URL
     describe "peersQuery" $ do
         it "returns the URL with the peers endpoint" $
-            peersQuery "AAPL" `shouldBe` "https://api.iextrading.com/1.0/stock/AAPL/peers"
+            peersQuery "AAPL" `shouldBe` "https://api.iextrading.com/1.0/stock/aapl/peers"
     -- price URL
     describe "priceQuery" $ do
         it "returns the URL with the price endpoint" $
-            priceQuery "AAPL" `shouldBe` "https://api.iextrading.com/1.0/stock/AAPL/price"
+            priceQuery "AAPL" `shouldBe` "https://api.iextrading.com/1.0/stock/aapl/price"

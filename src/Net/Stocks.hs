@@ -4,6 +4,7 @@ module Net.Stocks where
   
 import Control.Monad
 import Control.Applicative
+import Data.Char
 import Data.Aeson
 import Data.List.NonEmpty
 import Data.ByteString.Lazy.Char8
@@ -50,6 +51,9 @@ instance FromJSON Financials where
 
 type Company = String
 
+lowerString :: Company -> String
+lowerString str = Prelude.map toLower str
+
 baseURL :: String
 baseURL = "https://api.iextrading.com/1.0/stock/"
 
@@ -60,19 +64,19 @@ data QueryType = QueryStocks
 
 -- builds the URL: /stock/{symbol}/quote
 stocksQuery :: Company -> String
-stocksQuery company = baseURL ++ company ++ "/quote"
+stocksQuery company = baseURL ++ lowerString company ++ "/quote"
 
 -- builds the URL: /stock/{symbol}/financials
 financialsQuery :: Company -> String
-financialsQuery company = baseURL ++ company ++ "/financials"
+financialsQuery company = baseURL ++ lowerString company ++ "/financials"
 
 -- builds the URL: /stock/{symbol}/peers
 peersQuery :: Company -> String
-peersQuery company = baseURL ++ company ++ "/peers"
+peersQuery company = baseURL ++ lowerString company ++ "/peers"
 
 -- builds the URL: /stock/{symbol}/price
 priceQuery :: Company -> String
-priceQuery company = baseURL ++ company ++ "/price"
+priceQuery company = baseURL ++ lowerString company ++ "/price"
 
 -- get JSON data 
 getData :: (FromJSON a) => String -> QueryType -> IO (Maybe a)
