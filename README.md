@@ -26,3 +26,9 @@ Which should show:
 ```
 Stock value: <the_actual_stock_value>
 ```
+
+### Attribution  
+If you redistribute our API data:
+
+⋅⋅* Cite IEX using the following text and link: “Data provided for free by IEX.”
+⋅⋅* Provide a link to https://iextrading.com/api-exhibit-a in your terms of service.
