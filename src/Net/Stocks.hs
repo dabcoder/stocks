@@ -1,6 +1,18 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Net.Stocks where
+module Net.Stocks
+        ( Stock(..)
+        , Financials(..)
+        , FinancialsList(..)
+        , QueryType(..)
+        , Company
+        , stocksQuery
+        , financialsQuery
+        , peersQuery
+        , priceQuery
+        , getData
+        , getNonJSONData
+        ) where
   
 import Control.Monad
 import Control.Applicative
@@ -14,7 +26,7 @@ import Network.HTTP.Conduit
 data Stock =
     Stock { company          :: String  -- ^ The company's name
           , latestPrice      :: Float   -- ^ Latest stock price
-          , latestTime       :: String  -- ^ Timeframe - string
+          , latestTime       :: String  -- ^ Timeframe
           , changePercent    :: Float   -- ^ Percentage change
           } deriving (Show)
 
@@ -40,7 +52,6 @@ data Financials =
                , cashFlow         :: Int     -- ^ Cash flow
                } deriving (Show)
 
--- https://stackoverflow.com/questions/16547783/parse-array-in-nested-json-with-aeson
 instance FromJSON Financials where
     parseJSON (Object v) = Financials
         <$> v .: "reportDate"
