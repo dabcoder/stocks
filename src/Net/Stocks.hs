@@ -31,18 +31,17 @@ data Stock =
           } deriving (Show)
 
 instance FromJSON Stock where
-    parseJSON (Object v) = Stock
+    parseJSON = withObject "Stock" $ \v -> Stock
         <$> v .: "companyName"
         <*> v .: "latestPrice"
         <*> v .: "latestTime"
         <*> v .: "changePercent"
-    parseJSON _          = mzero
 
 newtype FinancialsList = FinancialsList { financialsList :: NonEmpty Financials}
 
 instance FromJSON FinancialsList where
-    parseJSON (Object o) = FinancialsList <$> o .: "financials"
-    parseJSON _          = mzero
+    parseJSON = withObject "FinancialsList" $ \v -> FinancialsList 
+        <$> v .: "financials"
 
 -- | Financials data
 data Financials = 
@@ -53,12 +52,11 @@ data Financials =
                } deriving (Show)
 
 instance FromJSON Financials where
-    parseJSON (Object v) = Financials
+    parseJSON = withObject "Financials" $ \v -> Financials
         <$> v .: "reportDate"
         <*> v .: "grossProfit"
         <*> v .: "costOfRevenue"
         <*> v .: "cashFlow"
-    parseJSON _          = mzero
 
 type Company = String
 
