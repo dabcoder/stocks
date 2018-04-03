@@ -1,8 +1,8 @@
 name:                stocks
 version:             0.1.0.0
-synopsis:            Library for the Iextrading API
+synopsis:            Library for the IEX Trading API
 description:         Simple library for interacting with the Iextrading API
-homepage:            https://github.com/dabocder/stocks#readme
+homepage:            https://github.com/dabcoder/stocks#readme
 license:             BSD3
 license-file:        LICENSE
 author:              David Bouchare
