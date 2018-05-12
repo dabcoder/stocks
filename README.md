@@ -1,8 +1,8 @@
-# stocks  
+# stocks
 
-Haskell library for the IEX trading API.  
+Haskell library for the IEX trading API.
 
-Example:  
+Example:
 
 ```haskell
 {-# LANGUAGE RecordWildCards #-}
@@ -21,14 +21,19 @@ main = do
             putStrLn $ "Stock value: " ++ show latestPrice
 ```
 
-Which should show:  
+Which should show:
 
 ```
 Stock value: <the_actual_stock_value>
 ```
 
-### Attribution  
+## How to run test suite
+```
+stack test
+```
+
+### Attribution
 If you redistribute our API data:
 
-* Cite IEX using the following text and link: “Data provided for free by [IEX](https://iextrading.com/developer).”  
+* Cite IEX using the following text and link: “Data provided for free by [IEX](https://iextrading.com/developer).”
 * Provide a link to https://iextrading.com/api-exhibit-a in your terms of service.

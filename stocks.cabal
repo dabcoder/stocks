@@ -12,19 +12,26 @@ category:            Net
 build-type:          Simple
 cabal-version:       >=1.10
 extra-source-files:  README.md
-  
+
 library
-  exposed-modules:     Net.Stocks
-  -- other-modules:
-  -- other-extensions:
+  exposed-modules: Net.Stocks
   build-depends: base == 4.*
                , http-conduit
                , aeson >= 0.8.0
                , bytestring
                , semigroups >= 0.18
-  hs-source-dirs:      src
-  default-language:    Haskell2010
+  hs-source-dirs: src
+  default-language: Haskell2010
 
 source-repository head
   type:     git
   location: https://github.com/dabcoder/stocks.git
+
+-- quick check test suite
+Test-Suite test-hspec
+  type:              exitcode-stdio-1.0
+  main-is:           Tests/Main.hs
+  build-depends:     base,
+                     stocks,
+                     HUnit
+  default-language:  Haskell2010
