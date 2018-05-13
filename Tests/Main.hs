@@ -1,5 +1,3 @@
-{-# LANGUAGE RecordWildCards #-}
-
 module Main where
 
 import Test.HUnit

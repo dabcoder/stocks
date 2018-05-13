@@ -3,8 +3,60 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE DuplicateRecordFields #-}
 
+-- missing:
+
+--  * batch (https://iextrading.com/developer/docs/#batch-requests)
+--  * book (https://iextrading.com/developer/docs/#book)
+--  * chart (to be able to give different options to IEX,
+--           5y, 2y, 1y
+--           https://iextrading.com/developer/docs/#chart)
+--  * IEX Regulation SHO Threshold Securities List
+--        (https://iextrading.com/developer/docs/#iex-regulation-sho-\
+--         threshold-securities-list)
+--  * IEX Short Interest List
+--        (https://iextrading.com/developer/docs/#iex-short-interest-list)
+--  * logo (https://iextrading.com/developer/docs/#logo)
+--  * peers (https://iextrading.com/developer/docs/#peers)
+--  * relevant (https://iextrading.com/developer/docs/#relevant)
+--  * time series (https://iextrading.com/developer/docs/#time-series)
+
+--  * Reference data (https://iextrading.com/developer/docs/#reference-data)
+--    * Symbols
+--    * IEX Corporate Actions
+--    * IEX Dividends
+--    * IEX Next Day Ex Date
+--    * IEX Listed Symbol Directory
+
+-- * IEX market data (https://iextrading.com/developer/docs/#iex-market-data)
+--    * TOPS
+--    * Last
+--    * HIST
+--    * DEEP
+--    * Book
+--    * Trades
+--    * System Event
+--    * Trading Status
+--    * Operational Halt Status
+--    * Short Sale Price Test Status
+--    * Security Event
+--    * Trade Break
+--    * Auction
+--    * Official Price
+--        (https://iextrading.com/developer/docs/#iex-market-data)
+
+-- * IEX Stats (https://iextrading.com/developer/docs/#iex-stats)
+--    * Intraday
+--    * Recent
+--    * Records
+--    * Historical Summary
+--    * Historical Daily
+
+-- * Markets
+--    * Market (https://iextrading.com/developer/docs/#market)
+
 -- general FIXME: which fields in which records need to be Maybe?
 -- general FIXME: reduce copy paste coding?
+-- general FIXME: needs better, more specific testing
 
 module Net.Stocks
        (
@@ -217,10 +269,10 @@ data Stats = Stats {
   returnOnEquity :: Double,
   consensusEPS :: Double,
   numberOfEstimates :: Integer,
-  -- EPSSurpriseDollar
-  -- EPSSurprisePercent
+  epsSurpriseDollar :: Maybe Double,
+  epsSurprisePercent :: Maybe Double,
   symbol :: String,
-  -- EBITDA
+  ebitda :: Integer,
   revenue :: Integer,
   grossProfit :: Integer,
   cash :: Integer,
@@ -362,7 +414,16 @@ customOptionsDividend =
 customOptionsEarning =
   defaultOptions {
     fieldLabelModifier = let f "epsSurpriseDollar" = "EPSSurpriseDollar"
-                             f "epsReportDate" = "EPSReportDate"
+                             f "epsReportDate"     = "EPSReportDate"
+                             f other = other
+                         in f
+    }
+
+customOptionsStats =
+  defaultOptions {
+    fieldLabelModifier = let f "epsSurpriseDollar"  = "EPSSurpriseDollar"
+                             f "epsSurprisePercent" = "EPSSurprisePercent"
+                             f "ebitda"             = "EBITDA"
                              f other = other
                          in f
     }
@@ -399,7 +460,8 @@ instance FromJSON Earning where
 instance FromJSON EffectiveSpread
 instance FromJSON Financial
 instance FromJSON Financials
-instance FromJSON Stats
+instance FromJSON Stats where
+  parseJSON = genericParseJSON customOptionsStats
 instance FromJSON NewsItem
 instance FromJSON OHLC
 instance FromJSON PriceTime
