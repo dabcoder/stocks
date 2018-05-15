@@ -16,6 +16,7 @@ tests = TestList [TestLabel "" testChart,
                   TestLabel "" testStats,
                   TestLabel "" testNewsItem,
                   TestLabel "" testOHLC,
+                  TestLabel "" testPeers,
                   TestLabel "" testPrevious,
                   -- TestLabel "" testPrice, -- FIXME: how to test?
                   TestLabel "" testQuote,
@@ -42,6 +43,8 @@ testNewsItem = TestCase (do result <- getNewsItem "aapl"
                             assertBool "desc" (result /= Nothing))
 testOHLC = TestCase (do result <- getOHLC "aapl"
                         assertBool "desc" (result /= Nothing))
+testPeers = TestCase (do result <- getPeers "aapl"
+                         assertEqual "get the correct peers for AAPL" result ("[\"MSFT\",\"NOK\",\"IBM\",\"HPQ\",\"GOOGL\",\"BB\",\"XLK\"]"))
 testPrevious = TestCase (do result <- getPrevious "aapl"
                             assertBool "desc" (result /= Nothing))
 testQuote = TestCase (do result <- getQuote "aapl"

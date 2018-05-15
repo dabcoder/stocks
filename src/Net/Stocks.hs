@@ -71,6 +71,7 @@ module Net.Stocks
          getNewsItem,
          getOHLC,
          getPrevious,
+         getPeers,
          getPrice,
          getQuote,
          getSplit,
@@ -525,6 +526,11 @@ getOHLC :: Ticker -> IO (Maybe OHLC)
 getOHLC ticker = do
   obj <- getNonJSONData (baseURL ++ lowerString ticker ++ "/ohlc")
   return $ decode obj
+
+getPeers :: Ticker -> IO L8.ByteString
+getPeers ticker = do
+  obj <- getNonJSONData (baseURL ++ lowerString ticker ++ "/peers")
+  return $ obj
 
 getPrevious :: Ticker -> IO (Maybe Previous)
 getPrevious ticker = do
