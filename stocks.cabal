@@ -33,5 +33,6 @@ Test-Suite test-hspec
   main-is:           Tests/Main.hs
   build-depends:     base,
                      stocks,
+                     bytestring,
                      HUnit
   default-language:  Haskell2010
