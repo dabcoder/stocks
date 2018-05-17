@@ -21,6 +21,7 @@ tests = TestList [TestLabel "" testChart,
                   TestLabel "" testPrevious,
                   -- TestLabel "" testPrice, -- FIXME: how to test?
                   TestLabel "" testQuote,
+                  TestLabel "" testRelevant,
                   TestLabel "" testSplit,
                   TestLabel "" testVolumeByVenue]
 
@@ -52,6 +53,8 @@ testPrevious = TestCase (do result <- getPrevious "aapl"
                             assertBool "desc" (result /= Nothing))
 testQuote = TestCase (do result <- getQuote "aapl"
                          assertBool "desc" (result /= Nothing))
+testRelevant = TestCase (do result <- getRelevant "aapl"
+                            assertBool "desc" (result /= Nothing))
 testSplit = TestCase (do result <- getSplit "aapl"
                          assertBool "desc" (result /= Nothing))
 testVolumeByVenue = TestCase (do result <- getVolumeByVenue "aapl"
