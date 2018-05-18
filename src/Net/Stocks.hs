@@ -2,59 +2,7 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE DuplicateRecordFields #-}
-
--- missing:
-
---  * batch (https://iextrading.com/developer/docs/#batch-requests)
---  * book (https://iextrading.com/developer/docs/#book)
---  * chart (to be able to give different options to IEX,
---           5y, 2y, 1y
---           https://iextrading.com/developer/docs/#chart)
---  * IEX Regulation SHO Threshold Securities List
---        (https://iextrading.com/developer/docs/#iex-regulation-sho-\
---         threshold-securities-list)
---  * IEX Short Interest List
---        (https://iextrading.com/developer/docs/#iex-short-interest-list)
---  * logo (https://iextrading.com/developer/docs/#logo)
---  * time series (https://iextrading.com/developer/docs/#time-series)
-
---  * Reference data (https://iextrading.com/developer/docs/#reference-data)
---    * Symbols
---    * IEX Corporate Actions
---    * IEX Dividends
---    * IEX Next Day Ex Date
---    * IEX Listed Symbol Directory
-
--- * IEX market data (https://iextrading.com/developer/docs/#iex-market-data)
---    * TOPS
---    * Last
---    * HIST
---    * DEEP
---    * Book
---    * Trades
---    * System Event
---    * Trading Status
---    * Operational Halt Status
---    * Short Sale Price Test Status
---    * Security Event
---    * Trade Break
---    * Auction
---    * Official Price
---        (https://iextrading.com/developer/docs/#iex-market-data)
-
--- * IEX Stats (https://iextrading.com/developer/docs/#iex-stats)
---    * Intraday
---    * Recent
---    * Records
---    * Historical Summary
---    * Historical Daily
-
--- * Markets
---    * Market (https://iextrading.com/developer/docs/#market)
-
--- general FIXME: which fields in which records need to be Maybe?
--- general FIXME: reduce copy paste coding?
--- general FIXME: needs better, more specific testing
+{-# LANGUAGE FlexibleInstances #-}
 
 module Net.Stocks
        (
@@ -75,37 +23,96 @@ module Net.Stocks
          getRelevant,
          getSplit,
          getVolumeByVenue,
-         Chart,
-         Company,
-         DelayedQuote,
-         Dividend,
-         Earning,
-         Earnings,
-         EffectiveSpread,
-         Financial,
-         Financials,
-         Stats,
-         NewsItem,
-         OHLC,
-         PriceTime,
-         Previous,
-         Quote,
-         Relevant,
-         Split,
-         VolumeByVenue,
-         Ticker
+         getBatch,
+         getBatchCompany,
+         typeQuery,
+         Chart (..),
+         Company (..),
+         DelayedQuote (..),
+         Dividend (..),
+         Earning (..),
+         Earnings (..),
+         EffectiveSpread (..),
+         Financial (..),
+         Financials (..),
+         Stats (..),
+         NewsItem (..),
+         OHLC (..),
+         PriceTime (..),
+         Previous (..),
+         Quote (..),
+         Split (..),
+         VolumeByVenue (..),
+         Ticker (..),
+         Batch (..),
+         BatchQuery (..)
        ) where
 
 import qualified Data.ByteString.Lazy.Char8 as L8
+import qualified Data.List as DL
+import qualified Data.Map as DM
 import           System.IO
 import           GHC.Generics
 import           Data.Aeson
+import           Data.Aeson.Types
 import           Data.Aeson.TH
 import           Data.Char
+import           Data.HashMap.Strict
 import           Data.Maybe
 import           Network.HTTP.Conduit
 
 type Ticker = String
+
+data BatchQuery =
+  NewsQuery |
+  ChartQuery |
+  CompanyQuery |
+  DelayedQuoteQuery |
+  DividendQuery |
+  EarningsQuery |
+  EffectiveSpreadQuery |
+  FinancialsQuery |
+  StatsQuery |
+  OHLCQuery |
+  PriceTimeQuery |
+  PreviousQuery |
+  QuoteQuery |
+  SplitQuery |
+  VolumeByVenueQuery
+
+batchQueryToStr :: BatchQuery -> String
+batchQueryToStr NewsQuery = "news"
+batchQueryToStr ChartQuery = "chart"
+batchQueryToStr CompanyQuery = "company"
+batchQueryToStr DelayedQuoteQuery = "delayedquote"
+batchQueryToStr DividendQuery = "dividends"
+batchQueryToStr EarningsQuery = "earnings"
+batchQueryToStr EffectiveSpreadQuery = "effectivespread"
+batchQueryToStr FinancialsQuery = "financials"
+batchQueryToStr StatsQuery = "stats"
+batchQueryToStr OHLCQuery = "ohlc"
+batchQueryToStr PriceTimeQuery = "price"
+batchQueryToStr QuoteQuery = "quote"
+batchQueryToStr SplitQuery = "split"
+batchQueryToStr VolumeByVenueQuery = "volumebyvenue"
+
+data Batch = Batch {
+  news :: Maybe [NewsItem],
+  chart :: Maybe [Chart],
+  company :: Maybe Company,
+  delayedQuote :: Maybe DelayedQuote,
+  dividend :: Maybe [Dividend],
+  earnings :: Maybe Earnings,
+  effectiveSpread :: Maybe [EffectiveSpread],
+  financials :: Maybe Financials,
+  stats :: Maybe Stats,
+  ohlc :: Maybe OHLC,
+  priceTime :: Maybe Integer,
+  previous :: Maybe Previous,
+  quote :: Maybe Quote,
+  split :: Maybe [Split],
+  volumeByVenue :: Maybe [VolumeByVenue]
+} deriving (Generic, Show, Eq)
 
 data Chart = Chart {
   -- is only available on 1d chart.
@@ -202,7 +209,7 @@ data Earning = Earning {
   consensusEPS :: Double,
   estimatedEPS :: Double,
   announceTime :: String,
-  numberOfEstimates :: Int,
+  numberOfEstimates :: Integer,
   epsSurpriseDollar :: Double,
   epsReportDate :: String,
   fiscalPeriod :: String,
@@ -453,6 +460,7 @@ instance ToJSON Quote
 instance ToJSON Relevant
 instance ToJSON Split
 instance ToJSON VolumeByVenue
+instance ToJSON Batch
 
 -- FromJSON means parsing the text into a haskell data structure
 instance FromJSON Chart
@@ -477,12 +485,13 @@ instance FromJSON Quote
 instance FromJSON Relevant
 instance FromJSON Split
 instance FromJSON VolumeByVenue
+instance FromJSON Batch
 
 baseURL :: String
 baseURL = "https://api.iextrading.com/1.0/stock/"
 
 lowerString :: Ticker -> String
-lowerString = map toLower
+lowerString = DL.map toLower
 
 getChart :: Ticker -> IO (Maybe [Chart])
 getChart ticker = do
@@ -545,7 +554,7 @@ getPrevious ticker = do
   return $ decode obj
 
 -- FIXME: do not json parse an int
-getPrice :: Ticker -> IO (Maybe Integer)
+getPrice :: Ticker -> IO (Maybe Double)
 getPrice ticker = do
   obj <- getNonJSONData (baseURL ++ lowerString ticker ++ "/price")
   return $ decode obj
@@ -569,6 +578,38 @@ getVolumeByVenue :: Ticker -> IO (Maybe [VolumeByVenue])
 getVolumeByVenue ticker = do
   obj <- getNonJSONData (baseURL ++ lowerString ticker ++ "/volume-by-venue")
   return $ decode obj
+
+-- get a list of parts we want in a batch request, and translate that
+-- to HTTP parameters to provide to the API call
+typeQuery :: [BatchQuery] -> String
+typeQuery [] = ""
+typeQuery inp =
+  "types=" ++ (concat $ DL.intersperse "," (fmap batchQueryToStr inp))
+
+symbolQuery :: [Ticker] -> String
+symbolQuery [] = ""
+symbolQuery inp = "symbols=" ++ (concat $ DL.intersperse "," inp)
+
+questionMark :: [BatchQuery] -> String
+questionMark [] = ""
+questionMark _  = "?"
+
+getBatch :: [Ticker] -> [BatchQuery] -> IO (Maybe (DM.Map String Batch))
+getBatch tickers queryParams =
+  let urlPt = baseURL ++ "market/batch?"
+      fullQuery = urlPt ++ symbolQuery tickers ++ "&" ++ typeQuery queryParams
+  in do
+    obj <- getNonJSONData fullQuery
+    return $ decode obj
+
+-- batch query of a *single* company
+getBatchCompany :: Ticker -> [BatchQuery] -> IO (Maybe Batch)
+getBatchCompany ticker queryParams =
+  let urlPt = (baseURL ++ lowerString ticker ++ "/batch/")
+      fullQuery = urlPt ++ (questionMark queryParams) ++ (typeQuery queryParams)
+  in do
+    obj <- getNonJSONData fullQuery
+    return $ decode obj
 
 getNonJSONData :: String -> IO L8.ByteString
 getNonJSONData query = do
