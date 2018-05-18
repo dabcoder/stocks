@@ -16,8 +16,6 @@
 --  * IEX Short Interest List
 --        (https://iextrading.com/developer/docs/#iex-short-interest-list)
 --  * logo (https://iextrading.com/developer/docs/#logo)
---  * peers (https://iextrading.com/developer/docs/#peers)
---  * relevant (https://iextrading.com/developer/docs/#relevant)
 --  * time series (https://iextrading.com/developer/docs/#time-series)
 
 --  * Reference data (https://iextrading.com/developer/docs/#reference-data)
@@ -74,6 +72,7 @@ module Net.Stocks
          getPeers,
          getPrice,
          getQuote,
+         getRelevant,
          getSplit,
          getVolumeByVenue,
          Chart,
@@ -91,6 +90,7 @@ module Net.Stocks
          PriceTime,
          Previous,
          Quote,
+         Relevant,
          Split,
          VolumeByVenue,
          Ticker
@@ -378,6 +378,11 @@ data Quote = Quote {
   ytdChange :: Double
 } deriving (Generic, Show, Eq)
 
+data Relevant = Relevant {
+  peers :: Bool,
+  symbols :: [String]
+} deriving (Generic, Show, Eq)
+
 data Split = Split {
   exDate :: String,
   declaredDate :: String,
@@ -445,6 +450,7 @@ instance ToJSON OHLC
 instance ToJSON PriceTime
 instance ToJSON Previous
 instance ToJSON Quote
+instance ToJSON Relevant
 instance ToJSON Split
 instance ToJSON VolumeByVenue
 
@@ -468,6 +474,7 @@ instance FromJSON OHLC
 instance FromJSON PriceTime
 instance FromJSON Previous
 instance FromJSON Quote
+instance FromJSON Relevant
 instance FromJSON Split
 instance FromJSON VolumeByVenue
 
@@ -546,6 +553,11 @@ getPrice ticker = do
 getQuote :: Ticker -> IO (Maybe Quote)
 getQuote ticker = do
   obj <- getNonJSONData (baseURL ++ lowerString ticker ++ "/quote")
+  return $ decode obj
+
+getRelevant :: Ticker -> IO (Maybe Relevant)
+getRelevant ticker = do
+  obj <- getNonJSONData (baseURL ++ lowerString ticker ++ "/relevant")
   return $ decode obj
 
 getSplit :: Ticker -> IO (Maybe [Split])
