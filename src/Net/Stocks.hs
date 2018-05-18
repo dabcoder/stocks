@@ -75,6 +75,7 @@ module Net.Stocks
          getRelevant,
          getSplit,
          getVolumeByVenue,
+         batchQueryToStr,
          Chart,
          Company,
          DelayedQuote,
@@ -93,7 +94,8 @@ module Net.Stocks
          Relevant,
          Split,
          VolumeByVenue,
-         Ticker
+         Ticker,
+         BatchQuery (..)
        ) where
 
 import qualified Data.ByteString.Lazy.Char8 as L8
@@ -102,10 +104,71 @@ import           GHC.Generics
 import           Data.Aeson
 import           Data.Aeson.TH
 import           Data.Char
+import           Data.List
 import           Data.Maybe
 import           Network.HTTP.Conduit
 
 type Ticker = String
+
+data BatchQuery =
+  NewsQuery |
+  ChartQuery |
+  CompanyQuery |
+  DelayedQuoteQuery |
+  DividendQuery |
+  EarningsQuery |
+  EffectiveSpreadQuery |
+  FinancialsQuery |
+  StatsQuery |
+  OHLCQuery |
+  PriceTimeQuery |
+  PreviousQuery |
+  QuoteQuery |
+  SplitQuery |
+  VolumeByVenueQuery
+
+batchQueryToStr :: BatchQuery -> String
+batchQueryToStr NewsQuery = "news"
+batchQueryToStr ChartQuery = "chart"
+batchQueryToStr CompanyQuery = "company"
+batchQueryToStr DelayedQuoteQuery = "delayedquote"
+batchQueryToStr DividendQuery = "dividends"
+batchQueryToStr EarningsQuery = "earnings"
+batchQueryToStr EffectiveSpreadQuery = "effectivespread"
+batchQueryToStr FinancialsQuery = "financials"
+batchQueryToStr StatsQuery = "stats"
+batchQueryToStr OHLCQuery = "ohlc"
+batchQueryToStr PriceTimeQuery = "price"
+batchQueryToStr QuoteQuery = "quote"
+batchQueryToStr SplitQuery = "split"
+batchQueryToStr VolumeByVenueQuery = "volumebyvenue"
+
+-- get a list of parts we want in a batch request, and translate that
+-- to HTTP parameters to provide to the API call
+typeQuery :: [BatchQuery] -> String
+typeQuery [] = ""
+typeQuery inp = '&' : (concat $ intersperse "," (fmap batchQueryToStr inp))
+
+data Batch = Batch {
+  news :: Maybe [NewsItem],
+  chart :: Maybe [Chart],
+  company :: Maybe Company,
+  delayedQuote :: Maybe DelayedQuote,
+  dividend :: Maybe [Dividend],
+  earnings :: Maybe Earnings,
+  effectiveSpread :: Maybe [EffectiveSpread],
+  financials :: Maybe Financials,
+  stats :: Maybe Stats,
+  ohlc :: Maybe OHLC,
+  priceTime :: Maybe Integer,
+  previous :: Maybe Previous,
+  quote :: Maybe Quote,
+  split :: Maybe [Split],
+  volumeByVenue :: Maybe [VolumeByVenue]
+} deriving (Generic, Show, Eq)
+
+getBatch :: [BatchQuery] -> IO Batch
+getBatch = undefined
 
 data Chart = Chart {
   -- is only available on 1d chart.
