@@ -22,7 +22,8 @@ tests = TestList [TestLabel "" testChart,
                   -- TestLabel "" testPrice, -- FIXME: how to test?
                   TestLabel "" testQuote,
                   TestLabel "" testSplit,
-                  TestLabel "" testVolumeByVenue]
+                  TestLabel "" testVolumeByVenue
+                  TestLabel "" testTypeQuery1]
 
 testChart = TestCase (do result <- getChart "aapl"
                          assertBool "desc" (result /= Nothing))
@@ -56,3 +57,5 @@ testSplit = TestCase (do result <- getSplit "aapl"
                          assertBool "desc" (result /= Nothing))
 testVolumeByVenue = TestCase (do result <- getVolumeByVenue "aapl"
                                  assertBool "desc" (result /= Nothing))
+testTypeQuery1 = TestCase (assertEqual "" "&news,ohlc"
+                           (typeQuery [NewsQuery, OHLCQuery]))
