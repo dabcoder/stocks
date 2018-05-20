@@ -43,7 +43,7 @@ module Net.Stocks
          Quote (..),
          Split (..),
          VolumeByVenue (..),
-         Ticker (..),
+         Symbol,
          Batch (..),
          BatchQuery (..)
        ) where
@@ -61,7 +61,7 @@ import           Data.HashMap.Strict
 import           Data.Maybe
 import           Network.HTTP.Conduit
 
-type Ticker = String
+type Symbol = String
 
 data BatchQuery =
   NewsQuery |
@@ -490,93 +490,93 @@ instance FromJSON Batch
 baseURL :: String
 baseURL = "https://api.iextrading.com/1.0/stock/"
 
-lowerString :: Ticker -> String
+lowerString :: Symbol -> String
 lowerString = DL.map toLower
 
-getChart :: Ticker -> IO (Maybe [Chart])
-getChart ticker = do
-  obj <- getNonJSONData (baseURL ++ lowerString ticker ++ "/chart")
+getChart :: Symbol -> IO (Maybe [Chart])
+getChart symb = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/chart")
   return $ decode obj
 
-getCompany :: Ticker -> IO (Maybe Company)
-getCompany ticker = do
-  obj <- getNonJSONData (baseURL ++ lowerString ticker ++ "/company")
+getCompany :: Symbol -> IO (Maybe Company)
+getCompany symb = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/company")
   return $ decode obj
 
-getDelayedQuote :: Ticker -> IO (Maybe DelayedQuote)
-getDelayedQuote ticker = do
-  obj <- getNonJSONData (baseURL ++ lowerString ticker ++ "/delayed-quote")
+getDelayedQuote :: Symbol -> IO (Maybe DelayedQuote)
+getDelayedQuote symb = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/delayed-quote")
   return $ decode obj
 
-getDelayedDividend :: Ticker -> IO (Maybe [Dividend])
-getDelayedDividend ticker = do
-  obj <- getNonJSONData (baseURL ++ lowerString ticker ++ "/dividends/5y")
+getDelayedDividend :: Symbol -> IO (Maybe [Dividend])
+getDelayedDividend symb = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/dividends/5y")
   return $ decode obj
 
-getEarnings :: Ticker -> IO (Maybe Earnings)
-getEarnings ticker = do
-  obj <- getNonJSONData (baseURL ++ lowerString ticker ++ "/earnings")
+getEarnings :: Symbol -> IO (Maybe Earnings)
+getEarnings symb = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/earnings")
   return $ decode obj
 
-getEffectiveSpread :: Ticker -> IO (Maybe [EffectiveSpread])
-getEffectiveSpread ticker = do
-  obj <- getNonJSONData (baseURL ++ lowerString ticker ++ "/effective-spread")
+getEffectiveSpread :: Symbol -> IO (Maybe [EffectiveSpread])
+getEffectiveSpread symb = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/effective-spread")
   return $ decode obj
 
-getFinancials :: Ticker -> IO (Maybe Financials)
-getFinancials ticker = do
-  obj <- getNonJSONData (baseURL ++ lowerString ticker ++ "/financials")
+getFinancials :: Symbol -> IO (Maybe Financials)
+getFinancials symb = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/financials")
   return $ decode obj
 
-getStats :: Ticker -> IO (Maybe Stats)
-getStats ticker = do
-  obj <- getNonJSONData (baseURL ++ lowerString ticker ++ "/stats")
+getStats :: Symbol -> IO (Maybe Stats)
+getStats symb = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/stats")
   return $ decode obj
 
-getNewsItem :: Ticker -> IO (Maybe [NewsItem])
-getNewsItem ticker = do
-  obj <- getNonJSONData (baseURL ++ lowerString ticker ++ "/news/last/1")
+getNewsItem :: Symbol -> IO (Maybe [NewsItem])
+getNewsItem symb = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/news/last/1")
   return $ decode obj
 
-getOHLC :: Ticker -> IO (Maybe OHLC)
-getOHLC ticker = do
-  obj <- getNonJSONData (baseURL ++ lowerString ticker ++ "/ohlc")
+getOHLC :: Symbol -> IO (Maybe OHLC)
+getOHLC symb = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/ohlc")
   return $ decode obj
 
-getPeers :: Ticker -> IO L8.ByteString
-getPeers ticker = do
-  obj <- getNonJSONData (baseURL ++ lowerString ticker ++ "/peers")
+getPeers :: Symbol -> IO L8.ByteString
+getPeers symb = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/peers")
   return $ obj
 
-getPrevious :: Ticker -> IO (Maybe Previous)
-getPrevious ticker = do
-  obj <- getNonJSONData (baseURL ++ lowerString ticker ++ "/previous")
+getPrevious :: Symbol -> IO (Maybe Previous)
+getPrevious symb = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/previous")
   return $ decode obj
 
 -- FIXME: do not json parse an int
-getPrice :: Ticker -> IO (Maybe Double)
-getPrice ticker = do
-  obj <- getNonJSONData (baseURL ++ lowerString ticker ++ "/price")
+getPrice :: Symbol -> IO (Maybe Double)
+getPrice symb = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/price")
   return $ decode obj
 
-getQuote :: Ticker -> IO (Maybe Quote)
-getQuote ticker = do
-  obj <- getNonJSONData (baseURL ++ lowerString ticker ++ "/quote")
+getQuote :: Symbol -> IO (Maybe Quote)
+getQuote symb = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/quote")
   return $ decode obj
 
-getRelevant :: Ticker -> IO (Maybe Relevant)
-getRelevant ticker = do
-  obj <- getNonJSONData (baseURL ++ lowerString ticker ++ "/relevant")
+getRelevant :: Symbol -> IO (Maybe Relevant)
+getRelevant symb = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/relevant")
   return $ decode obj
 
-getSplit :: Ticker -> IO (Maybe [Split])
-getSplit ticker = do
-  obj <- getNonJSONData (baseURL ++ lowerString ticker ++ "/splits/5y")
+getSplit :: Symbol -> IO (Maybe [Split])
+getSplit symb = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/splits/5y")
   return $ decode obj
 
-getVolumeByVenue :: Ticker -> IO (Maybe [VolumeByVenue])
-getVolumeByVenue ticker = do
-  obj <- getNonJSONData (baseURL ++ lowerString ticker ++ "/volume-by-venue")
+getVolumeByVenue :: Symbol -> IO (Maybe [VolumeByVenue])
+getVolumeByVenue symb = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/volume-by-venue")
   return $ decode obj
 
 -- get a list of parts we want in a batch request, and translate that
@@ -586,7 +586,7 @@ typeQuery [] = ""
 typeQuery inp =
   "types=" ++ (concat $ DL.intersperse "," (fmap batchQueryToStr inp))
 
-symbolQuery :: [Ticker] -> String
+symbolQuery :: [Symbol] -> String
 symbolQuery [] = ""
 symbolQuery inp = "symbols=" ++ (concat $ DL.intersperse "," inp)
 
@@ -594,18 +594,18 @@ questionMark :: [BatchQuery] -> String
 questionMark [] = ""
 questionMark _  = "?"
 
-getBatch :: [Ticker] -> [BatchQuery] -> IO (Maybe (DM.Map String Batch))
-getBatch tickers queryParams =
+getBatch :: [Symbol] -> [BatchQuery] -> IO (Maybe (DM.Map String Batch))
+getBatch symbs queryParams =
   let urlPt = baseURL ++ "market/batch?"
-      fullQuery = urlPt ++ symbolQuery tickers ++ "&" ++ typeQuery queryParams
+      fullQuery = urlPt ++ symbolQuery symbs ++ "&" ++ typeQuery queryParams
   in do
     obj <- getNonJSONData fullQuery
     return $ decode obj
 
 -- batch query of a *single* company
-getBatchCompany :: Ticker -> [BatchQuery] -> IO (Maybe Batch)
-getBatchCompany ticker queryParams =
-  let urlPt = (baseURL ++ lowerString ticker ++ "/batch/")
+getBatchCompany :: Symbol -> [BatchQuery] -> IO (Maybe Batch)
+getBatchCompany symb queryParams =
+  let urlPt = (baseURL ++ lowerString symb ++ "/batch/")
       fullQuery = urlPt ++ (questionMark queryParams) ++ (typeQuery queryParams)
   in do
     obj <- getNonJSONData fullQuery
