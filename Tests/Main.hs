@@ -1,9 +1,11 @@
 module Main where
 
-import qualified Data.ByteString.Lazy.Char8 as L8
+import Net.IEX.Previous
 import Test.HUnit
 import Net.Stocks
-import Data.Maybe
+
+import qualified Data.ByteString.Lazy.Char8 as L8
+import qualified Net.IEX.Stats              as XS
 
 main :: IO Counts
 main = runTestTT tests
@@ -28,7 +30,10 @@ tests = TestList [TestLabel "" testChart,
                   TestLabel "" testTypeQuery1,
                   TestLabel "" testBatch,
                   TestLabel "" testMultiBatch1,
-                  TestLabel "" testMultiBatch2]
+                  TestLabel "" testMultiBatch2,
+
+                  TestLabel "" testCorrectCompanyName
+                 ]
 
 testChart = TestCase (do result <- getChart "aapl"
                          assertBool "desc" (result /= Nothing))
@@ -68,22 +73,6 @@ testVolumeByVenue = TestCase (do result <- getVolumeByVenue "aapl"
                                  assertBool "desc" (result /= Nothing))
 testTypeQuery1 = TestCase (assertEqual "" "types=news,ohlc"
                            (typeQuery [NewsQuery, OHLCQuery]))
-
--- FIXME: when record names can be uniquely defined, we need to
---        have more specific tests, i.e. not just /= Nothing
-
--- the following batch requests asks for stats, news, company:
--- getBatchCompany "aapl" [StatsQuery, NewsQuery, CompanyQuery]
--- testBatch = TestCase
---   (do result <- getBatchCompany "aapl" [StatsQuery, NewsQuery, CompanyQuery]
---       assertEqual "" (pickCompany result) "Apple Inc.")
-
--- pickCompanyName :: Maybe Batch -> String
--- pickCompanyName (Just (Batch {stats = st})) = pickCompanyName' st
-
--- pickCompanyName' :: Maybe Company -> String
--- pickCompanyName' (Just (Stats {companyName = cname})) = fromJust cname
-
 testBatch = TestCase
   (do result <- getBatchCompany "aapl" [StatsQuery, NewsQuery, CompanyQuery]
       assertBool "" (result /= Nothing))
@@ -95,3 +84,14 @@ testMultiBatch1 = TestCase
 testMultiBatch2 = TestCase
   (do result <- getBatch ["dps", "fb"] [OHLCQuery, CompanyQuery]
       assertBool "" (result /= Nothing))
+
+-- fail
+testCorrectCompanyName = TestCase
+   (do result <- getBatchCompany "aapl" [StatsQuery, NewsQuery, CompanyQuery]
+       assertEqual "" (pickCompanyName result) "Apple Inc.")
+
+pickCompanyName :: Maybe Batch -> String
+pickCompanyName (Just (Batch {stats = st})) = pickCompanyName' st
+
+pickCompanyName' :: Maybe XS.Stats -> String
+pickCompanyName' (Just (XS.Stats {XS.companyName = cname})) = cname

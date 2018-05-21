@@ -14,7 +14,15 @@ cabal-version:       >=1.10
 extra-source-files:  README.md
 
 library
-  exposed-modules: Net.Stocks
+  exposed-modules: Net.Stocks, Net.IEX.Stats,
+                   Net.IEX.Chart, Net.IEX.Company,
+                   Net.IEX.Earnings, Net.IEX.DelayedQuote,
+                   Net.IEX.Dividend, Net.IEX.EffectiveSpread,
+                   Net.IEX.Financials, Net.IEX.NewsItem,
+                   Net.IEX.OHLC, Net.IEX.Previous,
+                   Net.IEX.PriceTime, Net.IEX.Quote,
+                   Net.IEX.Relevant, Net.IEX.Split,
+                   Net.IEX.VolumeByVenue
   build-depends: base == 4.*
                , http-conduit
                , aeson >= 0.8.0
@@ -29,7 +37,6 @@ source-repository head
   type:     git
   location: https://github.com/dabcoder/stocks.git
 
--- quick check test suite
 Test-Suite test-hspec
   type:              exitcode-stdio-1.0
   main-is:           Tests/Main.hs
