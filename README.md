@@ -1,5 +1,7 @@
 # stocks  
 
+[![Hackage](https://img.shields.io/hackage/v/lens.svg)](https://hackage.haskell.org/package/stocks)
+
 Haskell library for the IEX trading API.  
 
 Example:  
