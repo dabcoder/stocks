@@ -23,6 +23,7 @@ module Net.Stocks
          getVolumeByVenue,
          getBatch,
          getBatchCompany,
+         getMarket,
          typeQuery,
          Batch (..),
          BatchQuery (..)
@@ -56,6 +57,7 @@ import qualified Net.IEX.Quote              as IEXQuote
 import qualified Net.IEX.Split              as IEXSplit
 import qualified Net.IEX.VolumeByVenue      as IEXVolumeByVenue
 import qualified Net.IEX.Relevant           as IEXRelevant
+import qualified Net.IEX.Market             as IEXMarket
 
 type Symbol = String
 
@@ -117,6 +119,9 @@ instance FromJSON Batch
 
 baseURL :: String
 baseURL = "https://api.iextrading.com/1.0/stock/"
+
+marketURL :: String
+marketURL = "https://api.iextrading.com/1.0/market"
 
 lowerString :: Symbol -> String
 lowerString = DL.map toLower
@@ -237,6 +242,11 @@ getBatchCompany symb queryParams =
       fullQuery = urlPt ++ (questionMark queryParams) ++ (typeQuery queryParams)
   in do
     obj <- getNonJSONData fullQuery
+    return $ decode obj
+
+getMarket :: IO (Maybe [IEXMarket.Market])
+getMarket = do
+    obj <- getNonJSONData marketURL
     return $ decode obj
 
 getNonJSONData :: String -> IO L8.ByteString

@@ -31,8 +31,8 @@ tests = TestList [TestLabel "" testChart,
                   TestLabel "" testBatch,
                   TestLabel "" testMultiBatch1,
                   TestLabel "" testMultiBatch2,
-
-                  TestLabel "" testCorrectCompanyName
+                  TestLabel "" testCorrectCompanyName,
+                  TestLabel "" testMarket
                  ]
 
 testChart = TestCase (do result <- getChart "aapl"
@@ -95,3 +95,6 @@ pickCompanyName (Just (Batch {stats = st})) = pickCompanyName' st
 
 pickCompanyName' :: Maybe XS.Stats -> String
 pickCompanyName' (Just (XS.Stats {XS.companyName = cname})) = cname
+
+testMarket = TestCase (do result <- getMarket
+                          assertBool "" (result /= Nothing))
