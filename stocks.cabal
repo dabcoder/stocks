@@ -22,7 +22,8 @@ library
                    Net.IEX.OHLC, Net.IEX.Previous,
                    Net.IEX.PriceTime, Net.IEX.Quote,
                    Net.IEX.Relevant, Net.IEX.Split,
-                   Net.IEX.VolumeByVenue, Net.IEX.Market
+                   Net.IEX.VolumeByVenue, Net.IEX.Market,
+                   Net.IEX.IntraDayStats
   build-depends: base == 4.*
                , http-conduit
                , aeson >= 0.8.0
