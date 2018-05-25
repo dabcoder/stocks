@@ -23,7 +23,8 @@ library
                    Net.IEX.PriceTime, Net.IEX.Quote,
                    Net.IEX.Relevant, Net.IEX.Split,
                    Net.IEX.VolumeByVenue, Net.IEX.Market,
-                   Net.IEX.IntraDayStats
+                   Net.IEX.IntraDayStats, Net.IEX.RecentStats,
+                   Net.IEX.RecordStats
   build-depends: base == 4.*
                , http-conduit
                , aeson >= 0.8.0

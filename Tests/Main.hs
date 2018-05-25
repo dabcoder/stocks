@@ -33,7 +33,10 @@ tests = TestList [TestLabel "" testChart,
                   TestLabel "" testMultiBatch2,
                   TestLabel "" testCorrectCompanyName,
                   TestLabel "" testMarket,
-                  TestLabel "" testIntraDayStats
+                  TestLabel "" testIntraDayStats,
+                  TestLabel "" testRecentStats,
+                  TestLabel "" testRecordStats
+                  -- TestLabel "" testHistDailyStats
                  ]
 
 testChart = TestCase (do result <- getChart "aapl"
@@ -99,5 +102,15 @@ pickCompanyName' (Just (XS.Stats {XS.companyName = cname})) = cname
 
 testMarket = TestCase (do result <- getMarket
                           assertBool "" (result /= Nothing))
+
 testIntraDayStats = TestCase (do result <- getIntraDayStats
                                  assertBool "" (result /= Nothing))
+
+testRecentStats = TestCase (do result <- getRecentStats
+                               assertBool "" (result /= Nothing))
+
+testRecordStats = TestCase (do result <- getRecordStats
+                               assertBool "" (result /= Nothing))
+
+-- testHistDailyStats = TestCase (do result <- getHistoricalDailyStats
+--                                   assertBool "" (result /= Nothing))

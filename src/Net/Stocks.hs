@@ -25,6 +25,10 @@ module Net.Stocks
          getBatchCompany,
          getMarket,
          getIntraDayStats,
+         getRecentStats,
+         getRecordStats,
+         getHistoricalStats,
+         -- getHistoricalDailyStats,
          typeQuery,
          Batch (..),
          BatchQuery (..)
@@ -60,6 +64,8 @@ import qualified Net.IEX.VolumeByVenue      as IEXVolumeByVenue
 import qualified Net.IEX.Relevant           as IEXRelevant
 import qualified Net.IEX.Market             as IEXMarket
 import qualified Net.IEX.IntraDayStats      as IEXIntraDayStats
+import qualified Net.IEX.RecentStats        as IEXRecentStats
+import qualified Net.IEX.RecordStats        as IEXRecordStats
 
 type Symbol = String
 
@@ -127,6 +133,9 @@ marketURL = "https://api.iextrading.com/1.0/market"
 
 intraDayURL :: String
 intraDayURL = "https://api.iextrading.com/1.0/stats/intraday"
+
+statsURL :: String
+statsURL = "https://api.iextrading.com/1.0/stats/"
 
 lowerString :: Symbol -> String
 lowerString = DL.map toLower
@@ -258,6 +267,27 @@ getIntraDayStats :: IO (Maybe IEXIntraDayStats.IntraDayStats)
 getIntraDayStats = do
     obj <- getNonJSONData intraDayURL
     return $ decode obj
+
+getRecentStats :: IO (Maybe [IEXRecentStats.RecentStats])
+getRecentStats = do
+    obj <- getNonJSONData (statsURL ++ "recent")
+    return $ decode obj
+
+getRecordStats :: IO (Maybe IEXRecordStats.RecordStats)
+getRecordStats = do
+    obj <- getNonJSONData (statsURL ++ "records")
+    return $ decode obj
+
+getHistoricalStats :: IO (Maybe [IEXRecentStats.RecentStats])
+getHistoricalStats = undefined
+
+-- currently does not work due to inconsitency in
+-- IEX API. isHalfDay is Bool in one API call and Int in another
+
+-- getHistoricalDailyStats :: IO (Maybe [IEXRecentStats.RecentStats])
+-- getHistoricalDailyStats = do
+--     obj <- getNonJSONData (statsURL ++ "historical/daily")
+--     return $ decode obj
 
 getNonJSONData :: String -> IO L8.ByteString
 getNonJSONData query = do
