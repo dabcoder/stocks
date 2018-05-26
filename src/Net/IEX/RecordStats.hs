@@ -5,8 +5,6 @@ module Net.IEX.RecordStats (RecordStats(..),
 
 import Data.Maybe
 import Data.Aeson
-import Data.Aeson.Types
-import Data.Aeson.TH
 import GHC.Generics
 
 data RecordStats = RecordStats {

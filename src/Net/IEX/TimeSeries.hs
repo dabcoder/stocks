@@ -4,8 +4,6 @@ module Net.IEX.TimeSeries (TimeSeries(..)) where
 
 import Data.Maybe
 import Data.Aeson
-import Data.Aeson.Types
-import Data.Aeson.TH
 import GHC.Generics
 
 data TimeSeries = TimeSeries {

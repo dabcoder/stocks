@@ -4,8 +4,6 @@ module Net.IEX.NewsItem (NewsItem(..)) where
 
 import Data.Maybe
 import Data.Aeson
-import Data.Aeson.Types
-import Data.Aeson.TH
 import GHC.Generics
 
 data NewsItem = NewsItem {

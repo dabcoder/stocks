@@ -4,8 +4,6 @@ module Net.IEX.Stats (Stats (..)) where
 
 import Data.Maybe
 import Data.Aeson
-import Data.Aeson.Types
-import Data.Aeson.TH
 import GHC.Generics
 
 data Stats = Stats {

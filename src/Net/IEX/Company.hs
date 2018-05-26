@@ -4,8 +4,6 @@ module Net.IEX.Company (Company(..)) where
 
 import Data.Maybe
 import Data.Aeson
-import Data.Aeson.Types
-import Data.Aeson.TH
 import GHC.Generics
 
 data Company = Company {
@@ -26,6 +24,7 @@ customOptionsCompany =
                              f other = other
                          in f
     }
+
 instance ToJSON Company
 instance FromJSON Company where
   parseJSON = genericParseJSON customOptionsCompany

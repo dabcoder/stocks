@@ -6,8 +6,6 @@ import Net.IEX.PriceTime
 
 import Data.Maybe
 import Data.Aeson
-import Data.Aeson.Types
-import Data.Aeson.TH
 import GHC.Generics
 
 data OHLC = OHLC {
