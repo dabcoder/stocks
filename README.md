@@ -5,7 +5,7 @@ Haskell library for the IEX trading API.
 Example:
 
 ```haskell
-stack ghci
+stack build && stack ghci
 
 > getCompany "aapl"
 
