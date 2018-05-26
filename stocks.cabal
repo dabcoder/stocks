@@ -24,7 +24,7 @@ library
                    Net.IEX.Relevant, Net.IEX.Split,
                    Net.IEX.VolumeByVenue, Net.IEX.Market,
                    Net.IEX.IntraDayStats, Net.IEX.RecentStats,
-                   Net.IEX.RecordStats, Net.IEX.Book
+                   Net.IEX.RecordStats, Net.IEX.Book, Net.IEX.TimeSeries
   build-depends: base == 4.*
                , http-conduit
                , aeson >= 0.8.0

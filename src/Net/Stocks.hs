@@ -22,6 +22,7 @@ module Net.Stocks
          getRelevant,
          getSplit,
          getVolumeByVenue,
+         getTS,
          getBatch,
          getBatchCompany,
          getMarket,
@@ -68,6 +69,7 @@ import qualified Net.IEX.IntraDayStats      as IEXIntraDayStats
 import qualified Net.IEX.RecentStats        as IEXRecentStats
 import qualified Net.IEX.RecordStats        as IEXRecordStats
 import qualified Net.IEX.Book               as IEXBook
+import qualified Net.IEX.TimeSeries         as IEXTimeSeries
 
 type Symbol = String
 
@@ -231,6 +233,11 @@ getSplit symb = do
 getVolumeByVenue :: Symbol -> IO (Maybe [IEXVolumeByVenue.VolumeByVenue])
 getVolumeByVenue symb = do
   obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/volume-by-venue")
+  return $ decode obj
+
+getTS :: Symbol -> IO (Maybe [IEXTimeSeries.TimeSeries])
+getTS symb = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/time-series")
   return $ decode obj
 
 -- get a list of parts we want in a batch request, and translate that
