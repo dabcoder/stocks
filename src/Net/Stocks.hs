@@ -6,6 +6,7 @@ module Net.Stocks
        (
          getChart,
          getCompany,
+         getBook,
          getDelayedQuote,
          getDelayedDividend,
          getEarnings,
@@ -66,6 +67,7 @@ import qualified Net.IEX.Market             as IEXMarket
 import qualified Net.IEX.IntraDayStats      as IEXIntraDayStats
 import qualified Net.IEX.RecentStats        as IEXRecentStats
 import qualified Net.IEX.RecordStats        as IEXRecordStats
+import qualified Net.IEX.Book               as IEXBook
 
 type Symbol = String
 
@@ -148,6 +150,11 @@ getChart symb = do
 getCompany :: Symbol -> IO (Maybe IEXCompany.Company)
 getCompany symb = do
   obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/company")
+  return $ decode obj
+
+getBook :: Symbol -> IO (Maybe IEXBook.Book)
+getBook symb = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/book")
   return $ decode obj
 
 getDelayedQuote :: Symbol -> IO (Maybe IEXDelayedQuote.DelayedQuote)

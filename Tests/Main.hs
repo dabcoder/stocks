@@ -35,8 +35,9 @@ tests = TestList [TestLabel "" testChart,
                   TestLabel "" testMarket,
                   TestLabel "" testIntraDayStats,
                   TestLabel "" testRecentStats,
-                  TestLabel "" testRecordStats
+                  TestLabel "" testRecordStats,
                   -- TestLabel "" testHistDailyStats
+                  TestLabel "" testBook
                  ]
 
 testChart = TestCase (do result <- getChart "aapl"
@@ -111,6 +112,9 @@ testRecentStats = TestCase (do result <- getRecentStats
 
 testRecordStats = TestCase (do result <- getRecordStats
                                assertBool "" (result /= Nothing))
+
+testBook = TestCase (do result <- getBook "aapl"
+                        assertBool "" (result /= Nothing))
 
 -- testHistDailyStats = TestCase (do result <- getHistoricalDailyStats
 --                                   assertBool "" (result /= Nothing))
