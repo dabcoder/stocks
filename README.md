@@ -5,27 +5,27 @@ Haskell library for the IEX trading API.
 Example:
 
 ```haskell
-{-# LANGUAGE RecordWildCards #-}
+stack ghci
 
-import Net.Stocks
+> getCompany "aapl"
 
-comp :: String
-comp = "AAPL"
+Just (Company {symbol = "AAPL",
+               companyName = "Apple Inc.",
+               exchange = "Nasdaq Global Select",
+               industry = "Computer Hardware",
+               website = "http://www.apple.com",
+               description = "Apple Inc is designs ...",
+               ceo = "Timothy D. Cook",
+               issueType = "cs",
+               sector = "Technology"})
 
-main :: IO ()
-main = do
-    resp <- getData comp QueryStocks
-    case resp of
-        Nothing -> putStrLn "No data for that company"
-        Just (Stock{..}) -> do
-            putStrLn $ "Stock value: " ++ show latestPrice
+> getPrice "dps"
+
+Just 120.36
 ```
 
-Which should show:
-
-```
-Stock value: <the_actual_stock_value>
-```
+Please see the HUnit test for a complete example
+of all API calls.
 
 ## How to run test suite
 ```
