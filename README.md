@@ -32,6 +32,10 @@ of all API calls.
 stack test
 ```
 
+## Contribute
+
+For any problems, comments, or feedback please create an issue [here on GitHub](https://github.com/dabcoder/stocks/issues).
+
 ### Attribution
 If you redistribute our API data:
 
