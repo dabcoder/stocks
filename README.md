@@ -1,6 +1,6 @@
 # stocks
 
-Haskell library for the IEX trading API.
+Haskell library for the IEX trading API.  
 
 Example:
 
