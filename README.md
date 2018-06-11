@@ -1,5 +1,7 @@
 # stocks
 
+[![Build Status](https://travis-ci.org/dabcoder/stocks.svg?branch=master)](https://travis-ci.org/dabcoder/stocks)  
+
 Haskell library for the IEX trading API.  
 
 Example:
