@@ -38,6 +38,7 @@ module Net.Stocks
 
 import System.IO
 import GHC.Generics
+import Control.Exception
 import Data.Aeson
 import Data.Char
 import Data.HashMap.Strict
@@ -305,5 +306,8 @@ getHistoricalStats = undefined
 
 getNonJSONData :: String -> IO L8.ByteString
 getNonJSONData query = do
-    obj <- simpleHttp query
-    return obj
+    obj <- try (simpleHttp query) :: IO (Either SomeException L8.ByteString)
+    case obj of 
+        Left ex -> putStrLn $ "Request failed"
+        Right val -> return val
+
