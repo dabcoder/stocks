@@ -166,7 +166,6 @@ getCompany symb = do
 getBook :: Symbol -> IO (Maybe IEXBook.Book)
 getBook symb = do
   obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/book")
-  putStrLn $ (baseURL ++ lowerString symb ++ "/book")
   case obj of
     Left _ ->
       return Nothing
