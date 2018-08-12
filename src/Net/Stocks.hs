@@ -148,98 +148,175 @@ lowerString = DL.map toLower
 getChart :: Symbol -> IO (Maybe [IEXChart.Chart])
 getChart symb = do
   obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/chart")
-  return $ decode obj
+  case obj of
+    Left _ ->
+      return Nothing
+    Right str ->
+      return $ decode str
 
 getCompany :: Symbol -> IO (Maybe IEXCompany.Company)
 getCompany symb = do
   obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/company")
-  return $ decode obj
+  case obj of
+    Left _ ->
+      return Nothing
+    Right bytestr ->
+      return $ decode bytestr
 
 getBook :: Symbol -> IO (Maybe IEXBook.Book)
 getBook symb = do
   obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/book")
-  return $ decode obj
+  putStrLn $ (baseURL ++ lowerString symb ++ "/book")
+  case obj of
+    Left _ ->
+      return Nothing
+    Right bytestr ->
+      return $ decode bytestr
 
 getDelayedQuote :: Symbol -> IO (Maybe IEXDelayedQuote.DelayedQuote)
 getDelayedQuote symb = do
   obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/delayed-quote")
-  return $ decode obj
+  case obj of
+    Left _ ->
+      return Nothing
+    Right bytestr ->
+      return $ decode bytestr
 
 getDelayedDividend :: Symbol -> IO (Maybe [IEXDividend.Dividend])
 getDelayedDividend symb = do
   obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/dividends/5y")
-  return $ decode obj
+  case obj of
+    Left _ ->
+      return Nothing
+    Right bytestr ->
+      return $ decode bytestr
 
 getEarnings :: Symbol -> IO (Maybe IEXEarnings.Earnings)
 getEarnings symb = do
   obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/earnings")
-  return $ decode obj
+  case obj of
+    Left _ ->
+      return Nothing
+    Right bytestr ->
+      return $ decode bytestr
 
 getEffectiveSpread :: Symbol -> IO (Maybe [IEXEffectiveSpread.EffectiveSpread])
 getEffectiveSpread symb = do
   obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/effective-spread")
-  return $ decode obj
+  case obj of
+    Left _ ->
+      return Nothing
+    Right bytestr ->
+      return $ decode bytestr
 
 getFinancials :: Symbol -> IO (Maybe IEXFinancials.Financials)
 getFinancials symb = do
   obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/financials")
-  return $ decode obj
+  case obj of
+    Left _ ->
+      return Nothing
+    Right bytestr ->
+      return $ decode bytestr
 
 getStats :: Symbol -> IO (Maybe IEXStats.Stats)
 getStats symb = do
   obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/stats")
-  return $ decode obj
+  case obj of
+    Left _ ->
+      return Nothing
+    Right bytestr ->
+      return $ decode bytestr
 
 getNewsItem :: Symbol -> IO (Maybe [IEXNewsItem.NewsItem])
 getNewsItem symb = do
   obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/news/last/1")
-  return $ decode obj
+  case obj of
+    Left _ ->
+      return Nothing
+    Right bytestr ->
+      return $ decode bytestr
 
 getOHLC :: Symbol -> IO (Maybe IEXOHLC.OHLC)
 getOHLC symb = do
   obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/ohlc")
-  return $ decode obj
+  case obj of
+    Left _ ->
+      return Nothing
+    Right bytestr ->
+      return $ decode bytestr
 
-getPeers :: Symbol -> IO L8.ByteString
+getPeers :: Symbol -> IO (Maybe L8.ByteString)
 getPeers symb = do
   obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/peers")
-  return $ obj
+  case obj of
+    Left _ ->
+      return Nothing
+    Right bytestr ->
+      return $ Just bytestr
 
 getPrevious :: Symbol -> IO (Maybe IEXPrevious.Previous)
 getPrevious symb = do
   obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/previous")
-  return $ decode obj
+  case obj of
+    Left _ ->
+      return Nothing
+    Right bytestr ->
+      return $ decode bytestr
 
 -- FIXME: do not json parse an int
 getPrice :: Symbol -> IO (Maybe Double)
 getPrice symb = do
   obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/price")
-  return $ decode obj
+  case obj of
+    Left _ ->
+      return Nothing
+    Right bytestr ->
+      return $ decode bytestr
 
 getQuote :: Symbol -> IO (Maybe IEXQuote.Quote)
 getQuote symb = do
   obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/quote")
-  return $ decode obj
+  case obj of
+    Left _ ->
+      return Nothing
+    Right bytestr ->
+      return $ decode bytestr
 
 getRelevant :: Symbol -> IO (Maybe IEXRelevant.Relevant)
 getRelevant symb = do
   obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/relevant")
-  return $ decode obj
+  case obj of
+    Left _ ->
+      return Nothing
+    Right bytestr ->
+      return $ decode bytestr
 
 getSplit :: Symbol -> IO (Maybe [IEXSplit.Split])
 getSplit symb = do
   obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/splits/5y")
-  return $ decode obj
+  case obj of
+    Left _ ->
+      return Nothing
+    Right bytestr ->
+      return $ decode bytestr
 
 getVolumeByVenue :: Symbol -> IO (Maybe [IEXVolumeByVenue.VolumeByVenue])
 getVolumeByVenue symb = do
   obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/volume-by-venue")
-  return $ decode obj
+  case obj of
+    Left _ ->
+      return Nothing
+    Right bytestr ->
+      return $ decode bytestr
 
 getTS :: Symbol -> IO (Maybe [IEXTimeSeries.TimeSeries])
 getTS symb = do
   obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/time-series")
-  return $ decode obj
+  case obj of
+    Left _ ->
+      return Nothing
+    Right bytestr ->
+      return $ decode bytestr
 
 -- get a list of parts we want in a batch request, and translate that
 -- to HTTP parameters to provide to the API call
@@ -262,7 +339,11 @@ getBatch symbs queryParams =
       fullQuery = urlPt ++ symbolQuery symbs ++ "&" ++ typeQuery queryParams
   in do
     obj <- getNonJSONData fullQuery
-    return $ decode obj
+    case obj of
+      Left _ ->
+        return Nothing
+      Right bytestr ->
+        return $ decode bytestr
 
 -- batch query of a *single* company
 getBatchCompany :: Symbol -> [BatchQuery] -> IO (Maybe Batch)
@@ -271,27 +352,47 @@ getBatchCompany symb queryParams =
       fullQuery = urlPt ++ (questionMark queryParams) ++ (typeQuery queryParams)
   in do
     obj <- getNonJSONData fullQuery
-    return $ decode obj
+    case obj of
+      Left _ ->
+        return Nothing
+      Right bytestr ->
+        return $ decode bytestr
 
 getMarket :: IO (Maybe [IEXMarket.Market])
 getMarket = do
-    obj <- getNonJSONData marketURL
-    return $ decode obj
+  obj <- getNonJSONData marketURL
+  case obj of
+    Left _ ->
+      return Nothing
+    Right bytestr ->
+      return $ decode bytestr
 
 getIntraDayStats :: IO (Maybe IEXIntraDayStats.IntraDayStats)
 getIntraDayStats = do
     obj <- getNonJSONData intraDayURL
-    return $ decode obj
+    case obj of
+      Left _ ->
+        return Nothing
+      Right bytestr ->
+        return $ decode bytestr
 
 getRecentStats :: IO (Maybe [IEXRecentStats.RecentStats])
 getRecentStats = do
     obj <- getNonJSONData (statsURL ++ "recent")
-    return $ decode obj
+    case obj of
+      Left _ ->
+        return Nothing
+      Right bytestr ->
+        return $ decode bytestr
 
 getRecordStats :: IO (Maybe IEXRecordStats.RecordStats)
 getRecordStats = do
     obj <- getNonJSONData (statsURL ++ "records")
-    return $ decode obj
+    case obj of
+      Left _ ->
+        return Nothing
+      Right bytestr ->
+        return $ decode bytestr
 
 getHistoricalStats :: IO (Maybe [IEXRecentStats.RecentStats])
 getHistoricalStats = undefined
@@ -304,10 +405,5 @@ getHistoricalStats = undefined
 --     obj <- getNonJSONData (statsURL ++ "historical/daily")
 --     return $ decode obj
 
-getNonJSONData :: String -> IO L8.ByteString
-getNonJSONData query = do
-    obj <- try (simpleHttp query) :: IO (Either SomeException L8.ByteString)
-    case obj of 
-        Left ex -> putStrLn $ "Request failed"
-        Right val -> return val
-
+getNonJSONData :: String -> IO (Either SomeException L8.ByteString)
+getNonJSONData query = try $ simpleHttp query
