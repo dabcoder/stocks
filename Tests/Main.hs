@@ -62,7 +62,7 @@ testNewsItem = TestCase (do result <- getNewsItem "aapl"
 testOHLC = TestCase (do result <- getOHLC "aapl"
                         assertBool "desc" (result /= Nothing))
 testPeers = TestCase
-  (do result <- getPeers "aapl"
+  (do (Just result) <- getPeers "aapl"
       assertEqual "get the correct peers for AAPL" result
         (L8.pack "[\"MSFT\",\"NOK\",\"IBM\",\"HPQ\",\"GOOGL\",\"BB\",\"XLK\"]"))
 testPrevious = TestCase (do result <- getPrevious "aapl"

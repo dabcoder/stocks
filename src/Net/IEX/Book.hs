@@ -11,7 +11,7 @@ data Book = Book {
   quote :: Quote,
   bids :: Maybe [Trade], -- FIXME: not sure of this type
   asks :: Maybe [Trade], -- FIXME: not sure of this type
-  trades :: [Trade]
+  trades :: Maybe [Trade]
 } deriving (Generic, Show, Eq)
 
 data Trade = Trade {
