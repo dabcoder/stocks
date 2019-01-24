@@ -5,6 +5,12 @@
 module Net.Stocks
        (
          getChart,
+         getChart5y,
+         getChart2y,
+         getChart1y,
+         getChart6m,
+         getChart3m,
+         getChart1m,
          getCompany,
          getBook,
          getDelayedQuote,
@@ -154,6 +160,67 @@ getChart symb = do
     Right str ->
       return $ decode str
 
+
+getChart5y :: Symbol -> IO (Maybe [IEXChart.Chart])
+getChart5y symb = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/chart/5y")
+  case obj of
+    Left _ ->
+      return Nothing
+    Right str ->
+      return $ decode str
+
+
+getChart2y :: Symbol -> IO (Maybe [IEXChart.Chart])
+getChart2y symb = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/chart/2y")
+  case obj of
+    Left _ ->
+      return Nothing
+    Right str ->
+      return $ decode str 
+
+
+getChart1y :: Symbol -> IO (Maybe [IEXChart.Chart])
+getChart1y symb = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/chart/1y")
+  case obj of
+    Left _ ->
+      return Nothing
+    Right str ->
+      return $ decode str
+
+
+getChart6m :: Symbol -> IO (Maybe [IEXChart.Chart])
+getChart6m symb = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/chart/6m")
+  case obj of
+    Left _ ->
+      return Nothing
+    Right str ->
+      return $ decode str
+
+
+getChart3m :: Symbol -> IO (Maybe [IEXChart.Chart])
+getChart3m symb = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/chart/3m")
+  case obj of
+    Left _ ->
+      return Nothing
+    Right str ->
+      return $ decode str
+
+
+getChart1m :: Symbol -> IO (Maybe [IEXChart.Chart])
+getChart1m symb = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/chart/1m")
+  case obj of
+    Left _ ->
+      return Nothing
+    Right str ->
+      return $ decode str
+
+  
 getCompany :: Symbol -> IO (Maybe IEXCompany.Company)
 getCompany symb = do
   obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/company")
