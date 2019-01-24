@@ -160,35 +160,66 @@ getChart symb = do
     Right str ->
       return $ decode str
 
+
 getChart5y :: Symbol -> IO (Maybe [IEXChart.Chart])
 getChart5y symb = do
   obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/chart/5y")
-  return $ decode obj
+  case obj of
+    Left _ ->
+      return Nothing
+    Right str ->
+      return $ decode str
+
 
 getChart2y :: Symbol -> IO (Maybe [IEXChart.Chart])
 getChart2y symb = do
   obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/chart/2y")
-  return $ decode obj
+  case obj of
+    Left _ ->
+      return Nothing
+    Right str ->
+      return $ decode str 
+
 
 getChart1y :: Symbol -> IO (Maybe [IEXChart.Chart])
 getChart1y symb = do
   obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/chart/1y")
-  return $ decode obj
+  case obj of
+    Left _ ->
+      return Nothing
+    Right str ->
+      return $ decode str
+
 
 getChart6m :: Symbol -> IO (Maybe [IEXChart.Chart])
 getChart6m symb = do
   obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/chart/6m")
-  return $ decode obj
+  case obj of
+    Left _ ->
+      return Nothing
+    Right str ->
+      return $ decode str
+
 
 getChart3m :: Symbol -> IO (Maybe [IEXChart.Chart])
 getChart3m symb = do
   obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/chart/3m")
-  return $ decode obj
+  case obj of
+    Left _ ->
+      return Nothing
+    Right str ->
+      return $ decode str
+
 
 getChart1m :: Symbol -> IO (Maybe [IEXChart.Chart])
 getChart1m symb = do
   obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/chart/1m")
-  return $ decode obj
+  case obj of
+    Left _ ->
+      return Nothing
+    Right str ->
+      return $ decode str
+
   
 getCompany :: Symbol -> IO (Maybe IEXCompany.Company)
 getCompany symb = do
