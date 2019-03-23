@@ -11,6 +11,9 @@ Change Log
 
 * Add changelog
 
+* Added new functionality:
+  getChart5y, getChart2y, getChart1y, getChart6m, getChart3m, getChart1m
+
 
 `0.2.0.0`_ (2018-05-30)
 ---------------------
