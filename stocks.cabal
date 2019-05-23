@@ -1,5 +1,5 @@
 name:                stocks
-version:             0.2.0.0
+version:             0.2.0.1
 synopsis:            Library for the IEX Trading API
 description:         Simple library for interacting with the IEX Trading API
 homepage:            https://github.com/dabcoder/stocks
