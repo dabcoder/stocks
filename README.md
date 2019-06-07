@@ -9,6 +9,7 @@ Example:
 ```haskell
 stack build && stack ghci
 
+getQuote :: AuthAndSymbol -> IO (Maybe IEXQuote.Quote)
 > getQuote ("pk_myAPItoken", "msft")
 
 Just (Quote {symbol = "MSFT",
@@ -20,7 +21,8 @@ Just (Quote {symbol = "MSFT",
              ...
              })
 
-> getCompany "aapl"
+getCompany :: AuthAndSymbol -> IO (Maybe IEXCompany.Company)
+> getCompany ("pk_myAPItoken", "aapl")
 
 Just (Company {symbol = "AAPL",
                companyName = "Apple Inc.",
@@ -32,9 +34,10 @@ Just (Company {symbol = "AAPL",
                issueType = "cs",
                sector = "Technology"})
 
-> getPrice "dps"
+getPrice :: AuthAndSymbol -> IO (Maybe Double)
+> getPrice ("pk_myAPItoken", "msft")
 
-Just 120.36
+Just 131.56
 ```
 
 Please see the HUnit test for a complete example

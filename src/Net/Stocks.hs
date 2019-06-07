@@ -215,9 +215,10 @@ getChart1m symb = do
     Right str ->
       return $ decode str
 
-getCompany :: Symbol -> IO (Maybe IEXCompany.Company)
-getCompany symb = do
-  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/company")
+getCompany :: AuthAndSymbol -> IO (Maybe IEXCompany.Company)
+getCompany (auth, symb) = do
+  let token = "?token=" ++ auth
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/company" ++ token)
   case obj of
     Left _ ->
       return Nothing
@@ -324,9 +325,10 @@ getPrevious symb = do
       return $ decode bytestr
 
 -- FIXME: do not json parse an int
-getPrice :: Symbol -> IO (Maybe Double)
-getPrice symb = do
-  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/price")
+getPrice :: AuthAndSymbol -> IO (Maybe Double)
+getPrice (auth, symb) = do
+  let token = "?token=" ++ auth
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/price" ++ token)
   case obj of
     Left _ ->
       return Nothing
@@ -467,4 +469,6 @@ getHistoricalStats = undefined
 --     return $ decode obj
 
 getNonJSONData :: String -> IO (Either SomeException L8.ByteString)
-getNonJSONData query = try $ simpleHttp query
+getNonJSONData query = do
+  putStrLn query
+  try $ simpleHttp query
