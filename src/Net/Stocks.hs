@@ -79,6 +79,7 @@ import qualified Net.IEX.Book               as IEXBook
 import qualified Net.IEX.TimeSeries         as IEXTimeSeries
 
 type Symbol = String
+type AuthAndSymbol = (String, Symbol)
 
 data BatchQuery =  NewsQuery            |
                    ChartQuery           |
@@ -137,7 +138,7 @@ instance ToJSON Batch
 instance FromJSON Batch
 
 baseURL :: String
-baseURL = "https://api.iextrading.com/1.0/stock/"
+baseURL = "https://cloud.iexapis.com/stable/stock/"
 
 marketURL :: String
 marketURL = "https://api.iextrading.com/1.0/market"
@@ -160,7 +161,6 @@ getChart symb = do
     Right str ->
       return $ decode str
 
-
 getChart5y :: Symbol -> IO (Maybe [IEXChart.Chart])
 getChart5y symb = do
   obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/chart/5y")
@@ -170,7 +170,6 @@ getChart5y symb = do
     Right str ->
       return $ decode str
 
-
 getChart2y :: Symbol -> IO (Maybe [IEXChart.Chart])
 getChart2y symb = do
   obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/chart/2y")
@@ -178,8 +177,7 @@ getChart2y symb = do
     Left _ ->
       return Nothing
     Right str ->
-      return $ decode str 
-
+      return $ decode str
 
 getChart1y :: Symbol -> IO (Maybe [IEXChart.Chart])
 getChart1y symb = do
@@ -190,7 +188,6 @@ getChart1y symb = do
     Right str ->
       return $ decode str
 
-
 getChart6m :: Symbol -> IO (Maybe [IEXChart.Chart])
 getChart6m symb = do
   obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/chart/6m")
@@ -199,7 +196,6 @@ getChart6m symb = do
       return Nothing
     Right str ->
       return $ decode str
-
 
 getChart3m :: Symbol -> IO (Maybe [IEXChart.Chart])
 getChart3m symb = do
@@ -210,7 +206,6 @@ getChart3m symb = do
     Right str ->
       return $ decode str
 
-
 getChart1m :: Symbol -> IO (Maybe [IEXChart.Chart])
 getChart1m symb = do
   obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/chart/1m")
@@ -220,7 +215,6 @@ getChart1m symb = do
     Right str ->
       return $ decode str
 
-  
 getCompany :: Symbol -> IO (Maybe IEXCompany.Company)
 getCompany symb = do
   obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/company")
@@ -339,11 +333,12 @@ getPrice symb = do
     Right bytestr ->
       return $ decode bytestr
 
-getQuote :: Symbol -> IO (Maybe IEXQuote.Quote)
-getQuote symb = do
-  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/quote")
+getQuote :: AuthAndSymbol -> IO (Maybe IEXQuote.Quote)
+getQuote (auth, symb) = do
+  let token = "?token=" ++ auth
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/quote" ++ token)
   case obj of
-    Left _ ->
+    Left _ -> do
       return Nothing
     Right bytestr ->
       return $ decode bytestr

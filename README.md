@@ -1,13 +1,24 @@
 # stocks
 
-[![Build Status](https://travis-ci.org/dabcoder/stocks.svg?branch=master)](https://travis-ci.org/dabcoder/stocks)  
+[![Build Status](https://travis-ci.org/dabcoder/stocks.svg?branch=master)](https://travis-ci.org/dabcoder/stocks)
 
-Haskell library for the IEX trading API.  
+Haskell library for the IEX trading API.
 
 Example:
 
 ```haskell
 stack build && stack ghci
+
+> getQuote ("pk_myAPItoken", "msft")
+
+Just (Quote {symbol = "MSFT",
+             companyName = "Microsoft Corp.",
+             primaryExchange = Nothing,
+             sector = Nothing,
+             calculationPrice = "tops",
+             open = 128.9,
+             ...
+             })
 
 > getCompany "aapl"
 
@@ -36,7 +47,8 @@ stack test
 
 ## Contribute
 
-For any problems, comments, or feedback please create an issue [here on GitHub](https://github.com/dabcoder/stocks/issues).
+For any problems, comments, or feedback please create an
+issue [here on GitHub](https://github.com/dabcoder/stocks/issues).
 
 ### Attribution
 If you redistribute our API data:
