@@ -152,63 +152,66 @@ statsURL = "https://api.iextrading.com/1.0/stats/"
 lowerString :: Symbol -> String
 lowerString = DL.map toLower
 
-getChart :: Symbol -> IO (Maybe [IEXChart.Chart])
-getChart symb = do
-  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/chart")
+tokenize :: String -> String
+tokenize auth = "?token=" ++ auth
+
+getChart :: AuthAndSymbol -> IO (Maybe [IEXChart.Chart])
+getChart (auth, symb) = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/chart" ++ tokenize auth)
   case obj of
     Left _ ->
       return Nothing
     Right str ->
       return $ decode str
 
-getChart5y :: Symbol -> IO (Maybe [IEXChart.Chart])
-getChart5y symb = do
-  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/chart/5y")
+getChart5y :: AuthAndSymbol -> IO (Maybe [IEXChart.Chart])
+getChart5y (auth, symb) = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/chart/5y" ++ tokenize auth)
   case obj of
     Left _ ->
       return Nothing
     Right str ->
       return $ decode str
 
-getChart2y :: Symbol -> IO (Maybe [IEXChart.Chart])
-getChart2y symb = do
-  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/chart/2y")
+getChart2y :: AuthAndSymbol -> IO (Maybe [IEXChart.Chart])
+getChart2y (auth, symb) = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/chart/2y" ++ tokenize auth)
   case obj of
     Left _ ->
       return Nothing
     Right str ->
       return $ decode str
 
-getChart1y :: Symbol -> IO (Maybe [IEXChart.Chart])
-getChart1y symb = do
-  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/chart/1y")
+getChart1y :: AuthAndSymbol -> IO (Maybe [IEXChart.Chart])
+getChart1y (auth, symb) = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/chart/1y" ++ tokenize auth)
   case obj of
     Left _ ->
       return Nothing
     Right str ->
       return $ decode str
 
-getChart6m :: Symbol -> IO (Maybe [IEXChart.Chart])
-getChart6m symb = do
-  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/chart/6m")
+getChart6m :: AuthAndSymbol -> IO (Maybe [IEXChart.Chart])
+getChart6m (auth, symb) = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/chart/6m" ++ tokenize auth)
   case obj of
     Left _ ->
       return Nothing
     Right str ->
       return $ decode str
 
-getChart3m :: Symbol -> IO (Maybe [IEXChart.Chart])
-getChart3m symb = do
-  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/chart/3m")
+getChart3m :: AuthAndSymbol -> IO (Maybe [IEXChart.Chart])
+getChart3m (auth, symb) = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/chart/3m" ++ tokenize auth)
   case obj of
     Left _ ->
       return Nothing
     Right str ->
       return $ decode str
 
-getChart1m :: Symbol -> IO (Maybe [IEXChart.Chart])
-getChart1m symb = do
-  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/chart/1m")
+getChart1m :: AuthAndSymbol -> IO (Maybe [IEXChart.Chart])
+getChart1m (auth, symb) = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/chart/1m" ++ tokenize auth)
   case obj of
     Left _ ->
       return Nothing
@@ -217,107 +220,106 @@ getChart1m symb = do
 
 getCompany :: AuthAndSymbol -> IO (Maybe IEXCompany.Company)
 getCompany (auth, symb) = do
-  let token = "?token=" ++ auth
-  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/company" ++ token)
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/company" ++ tokenize auth)
   case obj of
     Left _ ->
       return Nothing
     Right bytestr ->
       return $ decode bytestr
 
-getBook :: Symbol -> IO (Maybe IEXBook.Book)
-getBook symb = do
-  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/book")
+getBook :: AuthAndSymbol -> IO (Maybe IEXBook.Book)
+getBook (auth, symb) = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/book" ++ tokenize auth)
   case obj of
     Left _ ->
       return Nothing
     Right bytestr ->
       return $ decode bytestr
 
-getDelayedQuote :: Symbol -> IO (Maybe IEXDelayedQuote.DelayedQuote)
-getDelayedQuote symb = do
-  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/delayed-quote")
+getDelayedQuote :: AuthAndSymbol -> IO (Maybe IEXDelayedQuote.DelayedQuote)
+getDelayedQuote (auth, symb) = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/delayed-quote" ++ tokenize auth)
   case obj of
     Left _ ->
       return Nothing
     Right bytestr ->
       return $ decode bytestr
 
-getDelayedDividend :: Symbol -> IO (Maybe [IEXDividend.Dividend])
-getDelayedDividend symb = do
-  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/dividends/5y")
+getDelayedDividend :: AuthAndSymbol -> IO (Maybe [IEXDividend.Dividend])
+getDelayedDividend (auth, symb) = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/dividends/5y" ++ tokenize auth)
   case obj of
     Left _ ->
       return Nothing
     Right bytestr ->
       return $ decode bytestr
 
-getEarnings :: Symbol -> IO (Maybe IEXEarnings.Earnings)
-getEarnings symb = do
-  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/earnings")
+getEarnings :: AuthAndSymbol -> IO (Maybe IEXEarnings.Earnings)
+getEarnings (auth, symb) = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/earnings" ++ tokenize auth)
   case obj of
     Left _ ->
       return Nothing
     Right bytestr ->
       return $ decode bytestr
 
-getEffectiveSpread :: Symbol -> IO (Maybe [IEXEffectiveSpread.EffectiveSpread])
-getEffectiveSpread symb = do
-  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/effective-spread")
+getEffectiveSpread :: AuthAndSymbol -> IO (Maybe [IEXEffectiveSpread.EffectiveSpread])
+getEffectiveSpread (auth, symb) = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/effective-spread" ++ tokenize auth)
   case obj of
     Left _ ->
       return Nothing
     Right bytestr ->
       return $ decode bytestr
 
-getFinancials :: Symbol -> IO (Maybe IEXFinancials.Financials)
-getFinancials symb = do
-  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/financials")
+getFinancials :: AuthAndSymbol -> IO (Maybe IEXFinancials.Financials)
+getFinancials (auth, symb) = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/financials" ++ tokenize auth)
   case obj of
     Left _ ->
       return Nothing
     Right bytestr ->
       return $ decode bytestr
 
-getStats :: Symbol -> IO (Maybe IEXStats.Stats)
-getStats symb = do
-  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/stats")
+getStats :: AuthAndSymbol -> IO (Maybe IEXStats.Stats)
+getStats (auth, symb) = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/stats" ++ tokenize auth)
   case obj of
     Left _ ->
       return Nothing
     Right bytestr ->
       return $ decode bytestr
 
-getNewsItem :: Symbol -> IO (Maybe [IEXNewsItem.NewsItem])
-getNewsItem symb = do
-  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/news/last/1")
+getNewsItem :: AuthAndSymbol -> IO (Maybe [IEXNewsItem.NewsItem])
+getNewsItem (auth, symb) = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/news/last/1" ++ tokenize auth)
   case obj of
     Left _ ->
       return Nothing
     Right bytestr ->
       return $ decode bytestr
 
-getOHLC :: Symbol -> IO (Maybe IEXOHLC.OHLC)
-getOHLC symb = do
-  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/ohlc")
+getOHLC :: AuthAndSymbol -> IO (Maybe IEXOHLC.OHLC)
+getOHLC (auth, symb) = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/ohlc" ++ tokenize auth)
   case obj of
     Left _ ->
       return Nothing
     Right bytestr ->
       return $ decode bytestr
 
-getPeers :: Symbol -> IO (Maybe L8.ByteString)
-getPeers symb = do
-  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/peers")
+getPeers :: AuthAndSymbol -> IO (Maybe L8.ByteString)
+getPeers (auth, symb) = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/peers" ++ tokenize auth)
   case obj of
     Left _ ->
       return Nothing
     Right bytestr ->
       return $ Just bytestr
 
-getPrevious :: Symbol -> IO (Maybe IEXPrevious.Previous)
-getPrevious symb = do
-  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/previous")
+getPrevious :: AuthAndSymbol -> IO (Maybe IEXPrevious.Previous)
+getPrevious (auth, symb) = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/previous" ++ tokenize auth)
   case obj of
     Left _ ->
       return Nothing
@@ -327,8 +329,7 @@ getPrevious symb = do
 -- FIXME: do not json parse an int
 getPrice :: AuthAndSymbol -> IO (Maybe Double)
 getPrice (auth, symb) = do
-  let token = "?token=" ++ auth
-  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/price" ++ token)
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/price" ++ tokenize auth)
   case obj of
     Left _ ->
       return Nothing
@@ -337,44 +338,43 @@ getPrice (auth, symb) = do
 
 getQuote :: AuthAndSymbol -> IO (Maybe IEXQuote.Quote)
 getQuote (auth, symb) = do
-  let token = "?token=" ++ auth
-  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/quote" ++ token)
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/quote" ++ tokenize auth)
   case obj of
     Left _ -> do
       return Nothing
     Right bytestr ->
       return $ decode bytestr
 
-getRelevant :: Symbol -> IO (Maybe IEXRelevant.Relevant)
-getRelevant symb = do
-  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/relevant")
+getRelevant :: AuthAndSymbol -> IO (Maybe IEXRelevant.Relevant)
+getRelevant (auth, symb) = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/relevant" ++ tokenize auth)
   case obj of
     Left _ ->
       return Nothing
     Right bytestr ->
       return $ decode bytestr
 
-getSplit :: Symbol -> IO (Maybe [IEXSplit.Split])
-getSplit symb = do
-  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/splits/5y")
+getSplit :: AuthAndSymbol -> IO (Maybe [IEXSplit.Split])
+getSplit (auth, symb) = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/splits/5y" ++ tokenize auth)
   case obj of
     Left _ ->
       return Nothing
     Right bytestr ->
       return $ decode bytestr
 
-getVolumeByVenue :: Symbol -> IO (Maybe [IEXVolumeByVenue.VolumeByVenue])
-getVolumeByVenue symb = do
-  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/volume-by-venue")
+getVolumeByVenue :: AuthAndSymbol -> IO (Maybe [IEXVolumeByVenue.VolumeByVenue])
+getVolumeByVenue (auth, symb) = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/volume-by-venue" ++ tokenize auth)
   case obj of
     Left _ ->
       return Nothing
     Right bytestr ->
       return $ decode bytestr
 
-getTS :: Symbol -> IO (Maybe [IEXTimeSeries.TimeSeries])
-getTS symb = do
-  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/time-series")
+getTS :: AuthAndSymbol -> IO (Maybe [IEXTimeSeries.TimeSeries])
+getTS (auth, symb) = do
+  obj <- getNonJSONData (baseURL ++ lowerString symb ++ "/time-series" ++ tokenize auth)
   case obj of
     Left _ ->
       return Nothing
