@@ -1,4 +1,6 @@
 dist
+dist-*
+.ghc.*
 *.o
 *.hi
 .stack-work/
