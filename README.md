@@ -1,5 +1,7 @@
 # stocks
 
+# !!! Legacy iex API client. For up to date client please see [iexcloud](https://github.com/ksallberg/iexcloud).
+
 [![Build Status](https://travis-ci.org/dabcoder/stocks.svg?branch=master)](https://travis-ci.org/dabcoder/stocks)  
 
 Haskell library for the IEX trading API.  
